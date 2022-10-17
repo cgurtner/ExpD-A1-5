@@ -43,3 +43,26 @@ barplot(df_grp_year$n,names.arg=df_grp_year$Year,xlab="Year",ylab="Incidents",co
 
 # calculate mean
 mean(df_grp_year$n)
+
+# Top 10 States With Most Homicide Cases
+
+par(mar=c(8,6,2,2))
+
+filter_year <- data.frame(homicide_data[homicide_data$Year %in% c(2000:2014),])
+
+df <- data.frame(table(filter_year$State))
+colnames(df) <- c('state', 'count')
+top10 <- df[order(-df$count),][1:10,]
+
+barplot(
+    height=top10$count, 
+    names=top10$state, 
+    las=2, 
+    ylim=c(0,40000),
+    col=rgb(0.8,0.1,0.1,0.6),
+    main = "Top 10 States with most homicide cases 2000 - 2014",
+    ylab="Incidents"
+)
+
+# mean 2000 - 2014
+mean(df$count)
