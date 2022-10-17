@@ -64,5 +64,5 @@ barplot(
     ylab="Incidents"
 )
 
-# mean 2000 - 2014
+# mean per state from 2000 - 2014
 mean(df$count)
