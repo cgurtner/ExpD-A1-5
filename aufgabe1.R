@@ -65,4 +65,4 @@ barplot(
 )
 
 # mean per state from 2000 - 2014
-mean(df$count)
+median(df$count)
