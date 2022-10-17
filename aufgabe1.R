@@ -39,7 +39,7 @@ df_grp_year <- homicide_data |>
 
 # plot the data to a barplot
 barplot(df_grp_year$n,names.arg=df_grp_year$Year,xlab="Year",ylab="Incidents",col="blue",
-        main="Total incidents per Year", ylim = c(0,30000))
+        main="Total homicides incidents per Year", ylim = c(0,30000))
 
 # calculate mean
 mean(df_grp_year$n)
