@@ -1,5 +1,3 @@
-library(dplyr)
-
 # read .csv file
 homicide_data <- read.csv('C:/Users/Seitz/OneDrive/Dokumente/Studium/ExpD/Semesterarbeit/homicide_data.csv')
 
@@ -35,9 +33,13 @@ str(homicide_data)
 options(scipen=999)
 
 # group by year and sum up incidents
-df_grp_year <- homicide_data %>% group_by(Year) %>% summarise(total_incidents = sum(Incident))
+df_grp_year <- homicide_data |>
+  distinct() |>
+  count(Year)
 
-# plot the data to a lineplot
-plot(df_grp_year$Year, df_grp_year$total_incidents, main = "Total Homicides in the US",xlab="Year",
-     ylab="Incident count")
-lines(df_grp_year$Year, df_grp_year$total_incidents)
+# plot the data to a barplot
+barplot(df_grp_year$n,names.arg=df_grp_year$Year,xlab="Year",ylab="Incidents",col="blue",
+        main="Total incidents per Year", ylim = c(0,30000))
+
+# calculate mean
+mean(df_grp_year$n)
