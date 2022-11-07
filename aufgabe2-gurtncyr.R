@@ -1,5 +1,6 @@
 # read .csv file
-homicide_data <- read.csv('./Git/ExpD-A1-5/homicide_data.csv')
+homicide_data <- read.csv(url('https://cgurtner.ch/files/homicide.csv'))
+
 dat <- homicide_data[homicide_data$Perpetrator.Sex != 'Unknown',]
 dat <- dat[dat$Weapon != 'Unknown',]
 

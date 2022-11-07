@@ -1,5 +1,5 @@
 # read .csv file
-homicide_data <- read.csv('C:/Users/Seitz/OneDrive/Dokumente/Studium/ExpD/Semesterarbeit/homicide_data.csv')
+homicide_data <- read.csv(url('https://cgurtner.ch/files/homicide.csv'))
 
 # mindestes 6 Variablen (Spalten)
 
