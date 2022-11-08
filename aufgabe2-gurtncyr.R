@@ -46,3 +46,20 @@ mycols = c(
 )
 barplot(table(merged$Weapon, merged$Perpetrator.Sex), beside=TRUE, xlim=c(0,20),col=mycols,legend=TRUE)
   
+## Michis Plots
+data <- read.csv(url('https://cgurtner.ch/files/homicide.csv'))
+# Falsche Daten entfernen
+filtered_data = data[data$Victim.Age < 150 & data$Perpetrator.Age > 0,]
+#Erstellung Scatterplot
+plot(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
+scatter.smooth(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer",col="red")
+
+#Pearson Korr
+cor(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, use = "pairwise.complete.obs")
+#Spearman Korr
+cor(filtered_data$Perpetrator.Age[vsel], filtered_data$Victim.Age[vsel], use = "pairwise.complete.obs", method = "spearman")
+
+filtered_data2 = data[data$Victim.Race != "Unknown" & data$Perpetrator.Race != "Unknown",]
+mosaicplot(table(filtered_data2$Victim.Race, filtered_data2$Perpetrator.Race),las = 2,col = c("yellow","green","red","grey"),
+           main = "", off = 2, border = "black")
+table(filtered_data2$Perpetrator.Race, filtered_data2$Victim.Race)
