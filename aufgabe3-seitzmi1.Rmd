@@ -1,0 +1,128 @@
+---
+title: "Aufgabe 3 ExpD"
+author: "Michael Seitz, Cyrill Gurtner"
+date: "2022-11-21"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(dplyr)
+homicide_data <- read.csv(url('https://cgurtner.ch/files/homicide.csv'))
+data <- read.csv(url('https://cgurtner.ch/files/homicide.csv'))
+knitr::opts_chunk$set(echo = F)
+df_grp_year <- homicide_data |>
+  distinct() |>
+  count(Year)
+
+filter_year <- data.frame(homicide_data[homicide_data$Year %in% c(2000:2014),])
+df <- data.frame(table(filter_year$State))
+colnames(df) <- c('state', 'count')
+top10 <- df[order(-df$count),][1:10,]
+
+dat <- homicide_data[homicide_data$Perpetrator.Sex != 'Unknown',]
+dat <- dat[dat$Weapon != 'Unknown',]
+df_male <- head(
+  dat[dat$Perpetrator.Sex == 'Male' & dat$Perpetrator.Age >= 18 & dat$Perpetrator.Age <= 60,]
+,1000)
+df_female <- head(
+  dat[dat$Perpetrator.Sex == 'Female' & dat$Perpetrator.Age >= 18 & dat$Perpetrator.Age <= 60,]
+,1000)
+
+merged <- rbind(df_male, df_female)
+merged$Weapon[merged$Weapon == "Handgun"] <- "Firearm"
+merged$Weapon[merged$Weapon == "Shotgun"] <- "Firearm"
+merged$Weapon[merged$Weapon == "Rifle"] <- "Firearm"
+merged$Weapon[merged$Weapon == "Gun"] <- "Firearm"
+merged$Weapon[merged$Weapon == "Strangulation"] <- "Suffocation"
+merged$Weapon[merged$Weapon == "Drowning"] <- "Suffocation"
+merged$Weapon[merged$Weapon == "Fire"] <- "Immolation"
+merged$Weapon[merged$Weapon == "Explosives"] <- "Immolation"
+merged$Weapon[merged$Weapon == "Fall"] <- "Immolation"
+
+filtered_data = data[data$Victim.Age < 150 & data$Perpetrator.Age > 0,]
+```
+
+## Aufgabe 1  
+
+Hier wird gezeigt, dass wir mindestens 6 Variablen (Spalten) und mindestens 30 Aufzeichnungen (Reihen) im Datensatz haben.
+
+```{r variable_count, include=TRUE}
+colnames(homicide_data)
+nrow(homicide_data)
+```
+\newpage
+### Total homicides incidents per Year  
+Der folgende Plot zeigt die Anzahl Ereignisse pro Jahr an.
+
+```{r incidents_per_year, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
+barplot(df_grp_year$n,names.arg=df_grp_year$Year,xlab="Year",ylab="Incidents",col="blue",
+        main="Total homicides incidents per Year", ylim = c(0,30000))
+```
+
+Durchschnittliche Fälle pro Jahr
+
+```{r mean, include = TRUE}
+mean(df_grp_year$n)
+```
+\newpage
+### Top 10 States with most homicide cases  
+Die folgende Grafik zeigt welche Staaten am meisten Fälle verzeichnete.
+
+```{r top10, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
+par(mar=c(8,6,2,2))
+barplot(
+    height=top10$count, 
+    names=top10$state, 
+    las=2, 
+    ylim=c(0,40000),
+    col=rgb(0.8,0.1,0.1,0.6),
+    main = "Top 10 States with most homicide cases 2000 - 2014",
+    ylab="Incidents"
+)
+```
+
+Der Median der Staaten ist:
+```{r median, include = TRUE}
+median(df$count)
+```
+\newpage
+## Aufgabe 2  
+
+### Which sex uses which weapon  
+Der Plot zeigt, welche Waffen vom jeweiligen Geschlecht verwendet wurden.
+
+```{r weapons, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
+mycols = c(
+  "black", # Blunt Object
+  "aquamarine", # Drugs
+  "azure3", # Firearm
+  "darkolivegreen1",  # Immolation
+  "firebrick", # Knife
+  "coral", # Poison
+  "darkorchid" # Suffocation
+)
+barplot(table(merged$Weapon, merged$Perpetrator.Sex), beside=TRUE, xlim=c(0,20),col=mycols,legend=TRUE)
+```
+\newpage
+### Correlation between perpetrator age and victim age  
+```{r correlation, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
+plot(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
+```
+Obwohl eine leichte Korrelation zu erkennen ist, ergeben die Korrelationskoeffizienten eher niedrige Werte.
+
+###### Pearson
+```{r pearson, include = TRUE}
+cor(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, use = "pairwise.complete.obs")
+```
+###### Spearman
+```{r spearman, include = TRUE}
+cor(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, use = "pairwise.complete.obs", method = "spearman")
+```
+\newpage
+### Grafik mit Trendlinie  
+Spannend wird es, wenn wir eine Trendlinie in die Grafik einfügen. Hier wird eine klare Korrelation aufgezeigt.
+
+```{r scattersmooth, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
+scatter.smooth(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer",col="red")
+```
