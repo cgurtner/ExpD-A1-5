@@ -78,7 +78,8 @@ barplot(
     ylim=c(0,40000),
     col=rgb(0.8,0.1,0.1,0.6),
     main = "Top 10 States with most homicide cases 2000 - 2014",
-    ylab="Incidents"
+    ylab="Incidents",
+    mgp = c(4,1,0)
 )
 ```
 
