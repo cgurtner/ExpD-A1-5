@@ -2,7 +2,11 @@
 title: "Aufgabe 3 ExpD"
 author: "Michael Seitz, Cyrill Gurtner"
 date: "2022-11-21"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -41,6 +45,10 @@ merged$Weapon[merged$Weapon == "Explosives"] <- "Immolation"
 merged$Weapon[merged$Weapon == "Fall"] <- "Immolation"
 
 filtered_data = data[data$Victim.Age < 150 & data$Perpetrator.Age > 0,]
+filtered_data2 = data[data$Victim.Race != "Unknown" & data$Perpetrator.Race != "Unknown",]
+filtered_data3 = filtered_data2[filtered_data2$Victim.Sex != "Unknown" & filtered_data2$Perpetrator.Sex != "Unknown",]
+female_data = filtered_data3[filtered_data3$Perpetrator.Sex != "Male",]
+male_data = filtered_data3[filtered_data3$Perpetrator.Sex != "Female",]
 ```
 
 ## Aufgabe 1  
@@ -106,11 +114,15 @@ mycols = c(
 barplot(table(merged$Weapon, merged$Perpetrator.Sex), beside=TRUE, xlim=c(0,20),col=mycols,legend=TRUE)
 ```
 \newpage
+
 ### Correlation between perpetrator age and victim age  
-```{r correlation, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
+
+```{r correlation, include = TRUE,fig.show="hold", fig.width = 20, fig.height = 8, fig.align="center"}
+par(mfrow=c(1,2))
 plot(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
+scatter.smooth(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer",col="red")
 ```
-Obwohl eine leichte Korrelation zu erkennen ist, ergeben die Korrelationskoeffizienten eher niedrige Werte.
+Obwohl eine leichte Korrelation zu erkennen ist, ergeben die Korrelationskoeffizienten eher niedrige Werte. Spannend wird es, wenn wir eine Trendlinie in die Grafik einfügen. Hier wird eine klare Korrelation aufgezeigt.  
 
 ###### Pearson
 ```{r pearson, include = TRUE}
@@ -121,9 +133,11 @@ cor(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, use = "pairwise.com
 cor(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, use = "pairwise.complete.obs", method = "spearman")
 ```
 \newpage
-### Grafik mit Trendlinie  
-Spannend wird es, wenn wir eine Trendlinie in die Grafik einfügen. Hier wird eine klare Korrelation aufgezeigt.
-
-```{r scattersmooth, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
-scatter.smooth(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer",col="red")
+### Wer ermordet wen?
+```{r race, include = TRUE, fig.show="hold",  fig.width = 20, fig.height = 8, fig.align="center"}
+par(mfrow=c(1,2), mar = c(1.2,3,1.2,1.2))
+mosaicplot(table(female_data$Perpetrator.Race, female_data$Victim.Race),col = c("yellow","green","red","grey"),
+             main = "Victims", off = 2, border = "black", las = 2, ylab = "Female Perpetrators")
+mosaicplot(table(male_data$Perpetrator.Race, male_data$Victim.Race),col = c("yellow","green","red","grey"),
+           main = "Victims", off = 2, border = "black",las = 2, ylab = "Male Perpetrators")
 ```
