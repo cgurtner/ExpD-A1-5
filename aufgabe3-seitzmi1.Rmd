@@ -114,9 +114,7 @@ mycols = c(
 barplot(table(merged$Weapon, merged$Perpetrator.Sex), beside=TRUE, xlim=c(0,20),col=mycols,legend=TRUE)
 ```
 \newpage
-
 ### Correlation between perpetrator age and victim age  
-
 ```{r correlation, include = TRUE,fig.show="hold", fig.width = 20, fig.height = 8, fig.align="center"}
 par(mfrow=c(1,2))
 plot(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
@@ -124,16 +122,24 @@ scatter.smooth(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "
 ```
 Obwohl eine leichte Korrelation zu erkennen ist, ergeben die Korrelationskoeffizienten eher niedrige Werte. Spannend wird es, wenn wir eine Trendlinie in die Grafik einfügen. Hier wird eine klare Korrelation aufgezeigt.  
 
-###### Pearson
-```{r pearson, include = TRUE}
-cor(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, use = "pairwise.complete.obs")
+### With Groups  
+```{r groups, include = TRUE, fig.show="hold",  fig.width = 20, fig.height = 8, fig.align="center"}
+group_1 = filtered_data[filtered_data$Perpetrator.Age > 60 & filtered_data$Perpetrator.Age < 99,]
+group_2 = filtered_data[filtered_data$Perpetrator.Age > 40 & filtered_data$Perpetrator.Age < 60,]
+group_3 = filtered_data[filtered_data$Perpetrator.Age > 20 & filtered_data$Perpetrator.Age < 40,]
+group_4 = filtered_data[filtered_data$Perpetrator.Age > 0 & filtered_data$Perpetrator.Age < 20,]
+
+par(mfrow=c(2,2), mar = c(4,4,3,0.5))
+plot(group_4$Perpetrator.Age, group_4$Victim.Age, 
+     xlab = "Alter Taeter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
+plot(group_3$Perpetrator.Age, group_3$Victim.Age, 
+     xlab = "Alter Taeter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
+plot(group_2$Perpetrator.Age, group_2$Victim.Age, 
+     xlab = "Alter Taeter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
+plot(group_1$Perpetrator.Age, group_1$Victim.Age, 
+     xlab = "Alter Taeter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
 ```
-###### Spearman
-```{r spearman, include = TRUE}
-cor(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, use = "pairwise.complete.obs", method = "spearman")
-```
-\newpage
-### Fälle nach Ethnien?
+### Fälle nach Ethnien
 ```{r race, include = TRUE, fig.show="hold",  fig.width = 20, fig.height = 8, fig.align="center"}
 par(mfrow=c(1,2), mar = c(1.2,3,1.2,1.2))
 mosaicplot(table(female_data$Perpetrator.Race, female_data$Victim.Race),col = c("yellow","green","red","grey"),
