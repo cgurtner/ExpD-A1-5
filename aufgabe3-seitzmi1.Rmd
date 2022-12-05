@@ -3,9 +3,9 @@ title: "Aufgabe 3 ExpD"
 author: "Michael Seitz, Cyrill Gurtner"
 date: "2022-11-21"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
   word_document: default
 ---
 
@@ -133,7 +133,7 @@ cor(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, use = "pairwise.com
 cor(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, use = "pairwise.complete.obs", method = "spearman")
 ```
 \newpage
-### Wer ermordet wen?
+### Fälle nach Ethnien?
 ```{r race, include = TRUE, fig.show="hold",  fig.width = 20, fig.height = 8, fig.align="center"}
 par(mfrow=c(1,2), mar = c(1.2,3,1.2,1.2))
 mosaicplot(table(female_data$Perpetrator.Race, female_data$Victim.Race),col = c("yellow","green","red","grey"),
