@@ -60,7 +60,7 @@ colnames(homicide_data)
 nrow(homicide_data)
 ```
 \newpage
-### Total homicides incidents per Year  
+### Fälle pro Jahr 
 Der folgende Plot zeigt die Anzahl Ereignisse pro Jahr an.
 
 ```{r incidents_per_year, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
@@ -74,7 +74,7 @@ Durchschnittliche Fälle pro Jahr
 mean(df_grp_year$n)
 ```
 \newpage
-### Top 10 States with most homicide cases  
+### Top 10 Staaten mit den meisten Fällen  
 Die folgende Grafik zeigt welche Staaten am meisten Fälle verzeichnete.
 
 ```{r top10, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
@@ -98,7 +98,7 @@ median(df$count)
 \newpage
 ## Aufgabe 2  
 
-### Which sex uses which weapon  
+### Welches Geschlecht benutzt welche Waffen  
 Der Plot zeigt, welche Waffen vom jeweiligen Geschlecht verwendet wurden.
 
 ```{r weapons, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
@@ -114,7 +114,7 @@ mycols = c(
 barplot(table(merged$Weapon, merged$Perpetrator.Sex), beside=TRUE, xlim=c(0,20),col=mycols,legend=TRUE)
 ```
 \newpage
-### Correlation between perpetrator age and victim age  
+### Korrelation zwischen dem Alter der Täter und der Opfer  
 ```{r correlation, include = TRUE,fig.show="hold", fig.width = 20, fig.height = 8, fig.align="center"}
 par(mfrow=c(1,2))
 plot(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
