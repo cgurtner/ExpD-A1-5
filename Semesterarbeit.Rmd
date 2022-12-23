@@ -1,7 +1,7 @@
 ---
-title: "Aufgabe 3 ExpD"
+title: "Semesterarbeit ExpD"
 author: "Michael Seitz, Cyrill Gurtner"
-date: "2022-11-21"
+date: "2022-12-23"
 output:
   pdf_document: default
   html_document:
@@ -51,6 +51,9 @@ female_data = filtered_data3[filtered_data3$Perpetrator.Sex != "Male",]
 male_data = filtered_data3[filtered_data3$Perpetrator.Sex != "Female",]
 ```
 
+## Einführung
+Der für diese Arbeit verwendete Datensatz stammt von der Webseite "kaggle.com". Er beinhaltet alle von US-Behörden verzeichneten Mordfälle, versuchte Morde, Amokläufe, Totschläge und versehentliche Tötungen von den Jahren 1980 bis 2014. Der Datensatz beinhaltet auch einige offensichtliche Fehleinträge, aus diesem Grund wurden die Daten im Vorfeld für unsere Visualisierungen bereinigt. Alle Einträge bei denen Personen über 150 Jahre alt waren wurden entfernt, weiter wurden Einträge entfernt, in denen Daten fehlten oder als "Unknwon" Eingetragen waren.
+
 ## Aufgabe 1  
 
 Hier wird gezeigt, dass wir mindestens 6 Variablen (Spalten) und mindestens 30 Aufzeichnungen (Reihen) im Datensatz haben.
@@ -69,7 +72,6 @@ barplot(df_grp_year$n,names.arg=df_grp_year$Year,xlab="Year",ylab="Incidents",co
 ```
 
 Durchschnittliche Fälle pro Jahr
-
 ```{r mean, include = TRUE}
 mean(df_grp_year$n)
 ```
@@ -90,7 +92,9 @@ barplot(
     mgp = c(4,1,0)
 )
 ```
-
+  
+Beachte: Es handelt sich hierbei um absolute Zahlen, sie sind nicht relativ zur Bevölkerungsgrösse in den einzelnen Staaten.
+  
 Der Median der Staaten ist:
 ```{r median, include = TRUE}
 median(df$count)
@@ -98,8 +102,8 @@ median(df$count)
 \newpage
 ## Aufgabe 2  
 
-### Welches Geschlecht benutzt welche Waffen  
-Der Plot zeigt, welche Waffen vom jeweiligen Geschlecht verwendet wurden.
+### "Die Waffe der Frau ist das Gift" 
+Der Plot zeigt, welche Waffen vom jeweiligen Geschlecht verwendet wurden. Zusehen ist, dass die Waffe "Gift" tatsächlich fast nur von Frauen eingesetzt wird.
 
 ```{r weapons, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
 mycols = c(
@@ -120,9 +124,10 @@ par(mfrow=c(1,2))
 plot(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
 scatter.smooth(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer",col="red")
 ```
-Obwohl eine leichte Korrelation zu erkennen ist, ergeben die Korrelationskoeffizienten eher niedrige Werte. Spannend wird es, wenn wir eine Trendlinie in die Grafik einfügen. Hier wird eine klare Korrelation aufgezeigt.  
+Es ist zu erkennen, dass es Korrelationen gibt. Jedoch sind die Korrelationskoeffizienten "Spearman" und "Pearson" zu wenig robust für unsere Daten, die Beeinflussung durch das Rauschen in den Daten ist zu gross. Die Korrelation wird deutlich sichtbar, wenn ein Glätter eingefügt wird. Weiter fällt auf, das es möglicherweise Altersgruppen gibt, in denen die Korrelation stärker oder schwächer ist. Es befinden sich viele der Datenpunkte ganz oben im Graphen, ob es sich hier um einen Fehler in den Daten handelt kann leider nicht gesagt werden, warum das es soviele Opfer im Alter von 99 im Datensatz gibt, ist nicht bekannt.  
 
 ### With Groups  
+Hier ist gut zu erkennen, dass es bei den Altersgruppen 0-20 und 60-99 Jahre eine Korrelation gibt. Bei den Gruppen 20-40 und 40-60 ist jedoch keine Korrelation zu sehen.
 ```{r groups, include = TRUE, fig.show="hold",  fig.width = 20, fig.height = 8, fig.align="center"}
 group_1 = filtered_data[filtered_data$Perpetrator.Age > 60 & filtered_data$Perpetrator.Age < 99,]
 group_2 = filtered_data[filtered_data$Perpetrator.Age > 40 & filtered_data$Perpetrator.Age < 60,]
@@ -139,7 +144,9 @@ plot(group_2$Perpetrator.Age, group_2$Victim.Age,
 plot(group_1$Perpetrator.Age, group_1$Victim.Age, 
      xlab = "Alter Taeter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
 ```
+\newpage
 ### Fälle nach Ethnien
+In den Amerikanischen Medien ist oft die Rede von sogenannter "Black on White" oder "White on Black violence". Wir wollten sehen ob unsere Daten Zusammenhänge innerhalb der Ethnien sugerieren.
 ```{r race, include = TRUE, fig.show="hold",  fig.width = 20, fig.height = 8, fig.align="center"}
 par(mfrow=c(1,2), mar = c(1.2,3,1.2,1.2))
 mosaicplot(table(female_data$Perpetrator.Race, female_data$Victim.Race),col = c("yellow","green","red","grey"),
@@ -147,3 +154,4 @@ mosaicplot(table(female_data$Perpetrator.Race, female_data$Victim.Race),col = c(
 mosaicplot(table(male_data$Perpetrator.Race, male_data$Victim.Race),col = c("yellow","green","red","grey"),
            main = "Victims", off = 2, border = "black",las = 2, ylab = "Male Perpetrators")
 ```
+Wie zusehen ist, sind die meisten Vorfälle innerhalb der eigenen Ethnie, Ethnienübergreifend gibt es deutlich weniger Fälle. Das Geschlecht der Täter spielt hierbei auch kaum eine Rolle.
