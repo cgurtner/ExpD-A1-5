@@ -52,7 +52,7 @@ male_data = filtered_data3[filtered_data3$Perpetrator.Sex != "Female",]
 ```
 
 ## Einführung
-Der für diese Arbeit verwendete Datensatz stammt von der Webseite "kaggle.com". Er beinhaltet alle von US-Behörden verzeichneten Mordfälle, versuchte Morde, Amokläufe, Totschläge und versehentliche Tötungen von den Jahren 1980 bis 2014. Der Datensatz beinhaltet auch einige offensichtliche Fehleinträge, aus diesem Grund wurden die Daten im Vorfeld für unsere Visualisierungen bereinigt. Alle Einträge bei denen Personen über 150 Jahre alt waren wurden entfernt, weiter wurden Einträge entfernt, in denen Daten fehlten oder als "Unknwon" Eingetragen waren.
+Der für diese Arbeit verwendete Datensatz stammt von der Webseite "kaggle.com". Er beinhaltet alle von US-Behörden verzeichneten Mordfälle, versuchten Morde, Amokläufe, Totschläge und versehentliche Tötungen von den Jahren 1980 bis 2014. Der Datensatz beinhaltet auch einige offensichtliche Fehleinträge. Aus diesem Grund wurden die Daten im Vorfeld für unsere Visualisierungen bereinigt. Alle Einträge bei denen Personen über 150 Jahre alt waren wurden entfernt, weiter wurden Einträge entfernt, in denen Daten fehlten oder als "Unknwon" eingetragen waren.
 
 ## Aufgabe 1  
 
@@ -65,20 +65,20 @@ nrow(homicide_data)
 \newpage
 ### Fälle pro Jahr 
 Der folgende Plot zeigt die Anzahl Ereignisse pro Jahr an.
-
+\vspace{0.5cm}
 ```{r incidents_per_year, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
 barplot(df_grp_year$n,names.arg=df_grp_year$Year,xlab="Year",ylab="Incidents",col="blue",
         main="Total homicides incidents per Year", ylim = c(0,30000))
 ```
-
+\vspace{0.5cm}
 Durchschnittliche Fälle pro Jahr
 ```{r mean, include = TRUE}
 mean(df_grp_year$n)
 ```
 \newpage
 ### Top 10 Staaten mit den meisten Fällen  
-Die folgende Grafik zeigt welche Staaten am meisten Fälle verzeichnete.
-
+Die folgende Grafik zeigt in welchen Staaten die Top 10 meisten Ereignisse aufgezeichnet wurden.
+\vspace{0.5cm}
 ```{r top10, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
 par(mar=c(8,6,2,2))
 barplot(
@@ -92,19 +92,28 @@ barplot(
     mgp = c(4,1,0)
 )
 ```
-  
+\vspace{0.5cm}
 Beachte: Es handelt sich hierbei um absolute Zahlen, sie sind nicht relativ zur Bevölkerungsgrösse in den einzelnen Staaten.
   
-Der Median der Staaten ist:
+Der Median aller Staaten, nicht nur der Top 10, ist:
 ```{r median, include = TRUE}
 median(df$count)
 ```
 \newpage
 ## Aufgabe 2  
+### Die Waffen der Geschlechter
+Der Plot zeigt, welche Waffen vom jeweiligen Geschlecht bevorzugt verwendet wurden. 
 
-### "Die Waffe der Frau ist das Gift" 
-Der Plot zeigt, welche Waffen vom jeweiligen Geschlecht verwendet wurden. Zusehen ist, dass die Waffe "Gift" tatsächlich fast nur von Frauen eingesetzt wird.
+Im Datensatz gibt es die folgenden Kategorien von Waffen: Handgun, Shotgun, Rifle, Gun, Strangulation, Drowning, Fire, Explosives, Fall, Blunt Object, Drugs, Knife, Poison. Da wir in unserer Grafik jedoch vergleichen möchten, welche Art der Tötung stattgefunden hat, möchten wir die Kategorien in verwandte Arten der Tötung zusammenfassen.
 
+Die Tötungsart Blunt Object, Drugs, Knife und Poison belassen wir. Die restlichen Kategorien fassen wir wie folgt zusammen:
+
+Firearm = [Handgun, Shotgun, Rifle, Gun]
+
+Suffocation = [Strangulation, Drowning]
+
+Immolation = [Fire, Explosives, Fall]
+\vspace{0.5cm}
 ```{r weapons, include = TRUE, fig.with = 7, fig.height = 5, fig.align="left"}
 mycols = c(
   "black", # Blunt Object
@@ -117,6 +126,13 @@ mycols = c(
 )
 barplot(table(merged$Weapon, merged$Perpetrator.Sex), beside=TRUE, xlim=c(0,20),col=mycols,legend=TRUE)
 ```
+\vspace{0.5cm}
+Eine nicht überraschende Feststellung ist, dass Männer öfter zu Schusswaffen greifen als Frauen.
+
+Erstaunlich ist jedoch, dass die Tötung mit einem Messer von Frauen öfter gewählt wird, als von Männern. 
+
+Dass das Gift eine Mordwaffe der Frau ist, so wie es oft in Büchern und Filmen porträtiert wird, bestätigt sich jedoch nicht. Zwar gibt es tatsächlich mehr dokumentierte Ergebnisse mit Tatwaffe Gift bei den Frauen. Unabhängig vom Geschlecht ist die Zahl jedoch sehr gering und der Unterschied nicht signifikant.
+
 \newpage
 ### Korrelation zwischen dem Alter der Täter und der Opfer  
 ```{r correlation, include = TRUE,fig.show="hold", fig.width = 20, fig.height = 8, fig.align="center"}
@@ -124,10 +140,12 @@ par(mfrow=c(1,2))
 plot(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer", col = rgb(0,0,0,0.05), pch = 16)
 scatter.smooth(filtered_data$Perpetrator.Age, filtered_data$Victim.Age, xlab = "Alter Täter", ylab = "Alter Opfer",col="red")
 ```
-Es ist zu erkennen, dass es Korrelationen gibt. Jedoch sind die Korrelationskoeffizienten "Spearman" und "Pearson" zu wenig robust für unsere Daten, die Beeinflussung durch das Rauschen in den Daten ist zu gross. Die Korrelation wird deutlich sichtbar, wenn ein Glätter eingefügt wird. Weiter fällt auf, das es möglicherweise Altersgruppen gibt, in denen die Korrelation stärker oder schwächer ist. Es befinden sich viele der Datenpunkte ganz oben im Graphen, ob es sich hier um einen Fehler in den Daten handelt kann leider nicht gesagt werden, warum das es soviele Opfer im Alter von 99 im Datensatz gibt, ist nicht bekannt.  
+\vspace{0.5cm}
+Es ist zu erkennen, dass es Korrelationen gibt. Jedoch sind die Korrelationskoeffizienten "Spearman" und "Pearson" zu wenig robust für unsere Daten, die Beeinflussung durch das Rauschen in den Daten ist zu gross. Die Korrelation wird deutlich sichtbar, wenn ein Glätter eingefügt wird. Weiter fällt auf, das es möglicherweise Altersgruppen gibt, in denen die Korrelation stärker oder schwächer ist. Es befinden sich viele der Datenpunkte ganz oben im Graphen. Ob es sich hier um einen Fehler in den Daten handelt, kann leider nicht gesagt werden. Warum es soviele Opfer im Alter von 99 Jahren im Datensatz gibt, ist ebenso nicht bekannt.  
 
 ### With Groups  
 Hier ist gut zu erkennen, dass es bei den Altersgruppen 0-20 und 60-99 Jahre eine Korrelation gibt. Bei den Gruppen 20-40 und 40-60 ist jedoch keine Korrelation zu sehen.
+\vspace{0.5cm}
 ```{r groups, include = TRUE, fig.show="hold",  fig.width = 20, fig.height = 8, fig.align="center"}
 group_1 = filtered_data[filtered_data$Perpetrator.Age > 60 & filtered_data$Perpetrator.Age < 99,]
 group_2 = filtered_data[filtered_data$Perpetrator.Age > 40 & filtered_data$Perpetrator.Age < 60,]
@@ -146,7 +164,8 @@ plot(group_1$Perpetrator.Age, group_1$Victim.Age,
 ```
 \newpage
 ### Fälle nach Ethnien
-In den Amerikanischen Medien ist oft die Rede von sogenannter "Black on White" oder "White on Black violence". Wir wollten sehen ob unsere Daten Zusammenhänge innerhalb der Ethnien sugerieren.
+In den Amerikanischen Medien ist oft die Rede von sogenannter "Black on White"- oder "White on Black"-Violence. Wir wollten sehen ob unsere Daten Zusammenhänge innerhalb der Ethnien suggerieren.
+\vspace{0.5cm}
 ```{r race, include = TRUE, fig.show="hold",  fig.width = 20, fig.height = 8, fig.align="center"}
 par(mfrow=c(1,2), mar = c(1.2,3,1.2,1.2))
 mosaicplot(table(female_data$Perpetrator.Race, female_data$Victim.Race),col = c("yellow","green","red","grey"),
@@ -154,4 +173,5 @@ mosaicplot(table(female_data$Perpetrator.Race, female_data$Victim.Race),col = c(
 mosaicplot(table(male_data$Perpetrator.Race, male_data$Victim.Race),col = c("yellow","green","red","grey"),
            main = "Victims", off = 2, border = "black",las = 2, ylab = "Male Perpetrators")
 ```
-Wie zusehen ist, sind die meisten Vorfälle innerhalb der eigenen Ethnie, Ethnienübergreifend gibt es deutlich weniger Fälle. Das Geschlecht der Täter spielt hierbei auch kaum eine Rolle.
+\vspace{0.5cm}
+Wie zusehen ist, sind die meisten Vorfälle innerhalb der eigenen Ethnie. Ethnienübergreifend gibt es deutlich weniger Fälle. Das Geschlecht der Täter spielt hierbei auch kaum eine Rolle.
